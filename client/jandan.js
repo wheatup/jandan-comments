@@ -53,7 +53,7 @@ async function onClickTucao({ target }) {
 		// TODO: 需要更稳定的父元素
 		let parent = target.parentElement.parentElement.parentElement;
 		let tucao = createCommentDiv(id, comments);
-		
+
 		tucaoMap.set(id, tucao);
 		parent.append(tucao);
 	}
@@ -70,8 +70,8 @@ function createCommentDiv(id, comments) {
 	container.classList.add('JC-Comments');
 	container.setAttribute('data-id', id);
 
-	container.append(createCommentsDiv(id, container, comments));
-	container.append(createCommentInput(id, container));
+	container.append(createCommentsDiv(comments));
+	container.append(createCommentInput());
 	return container;
 }
 
@@ -90,12 +90,10 @@ function toggleCommentsDiv(id) {
 
 
 /**
- * 创建吐槽区域
- * @param {Number|String} id 无聊图id
- * @param {HTMLElement} target 追加的父元素
- * @param {Array} comments 吐槽
+ * 创建吐槽列表区域
+ * @param {Array} comments 吐槽数据
  */
-function createCommentsDiv(id, target, comments) {
+function createCommentsDiv(comments) {
 	/* 
 	<ul>
 		<li>
@@ -140,10 +138,8 @@ function createCommentsDiv(id, target, comments) {
 
 /**
  * 创建吐槽输入区域
- * @param {Number|String} id 无聊图id
- * @param {HTMLElement} target 追加的父元素
  */
-function createCommentInput(id, target) {
+function createCommentInput() {
 
 	/*
 	<form class="JC-Comments-Form" onsumbit="return false;">
