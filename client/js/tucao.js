@@ -1,8 +1,14 @@
 class Tucao {
-
 	constructor(id, comments) {
 		this.id = id;
 		this.comments = [...comments];
+
+		this.pagination = {
+			currentPage: 1,
+			totalPage: 1,
+			entryPerPage: 5,
+			pageButtons: 5
+		};
 
 		this.$container = document.createElement('div');
 		this.$container.classList.add('JC-Comments');
@@ -10,6 +16,7 @@ class Tucao {
 
 		this.createCommentList();
 		this.createCommentForm();
+		this.updateCommentList();
 	}
 
 	/**
@@ -17,29 +24,14 @@ class Tucao {
 	 * @param {Array} comments 吐槽数据
 	 */
 	createCommentList() {
-		/* 
-		<ul>
-			<li>
-				<header>
-					<span>wheatup</span>
-					<span>2019-7-2 12:00:12</span>
-				</header>
-				<p>测试测试测试测试测试测试3</p>
-				<footer>
-					<span>[122]</span>
-					<span>[0]</span>
-				</footer>
-			</li>
-		</ul>
-		*/
-
 		this.$commentList = document.createElement('ul');
-
-		// 创建吐槽
-		this.comments.forEach(comment => this.createOneComment(comment));
-
 		this.$container.append(this.$commentList);
+
+		this.$pagination = document.createElement('ol');
+		this.$container.append(this.$pagination);
 	}
+
+
 
 	/**
 	 * 插入一条评论
@@ -69,16 +61,6 @@ class Tucao {
 	 * 创建吐槽输入区域
 	 */
 	createCommentForm() {
-		/*
-		<form class="JC-Comments-Form" onsumbit="return false;">
-			<header></header>
-			<textarea></textarea>
-			<footer>
-				<a href="javascript:void(0)">发送</a>
-			</footer>
-		</form>
-		*/
-
 		this.$commentForm = document.createElement('from');
 		this.$commentForm.classList.add('JC-Comments-Form');
 		this.$commentForm.onsubmit = 'return false;';
@@ -101,6 +83,9 @@ class Tucao {
 		this.$container.append(this.$commentForm);
 	}
 
+	/**
+	 * 尝试发布吐槽
+	 */
 	async postComment() {
 		let content = this.$textarea.value;
 		if (!content || content.length < 4) {
@@ -108,8 +93,9 @@ class Tucao {
 		} else {
 			let comment = await commentService.postComment(this.id, '蛋友', content);
 			this.comments.push(comment);
-			this.createOneComment(comment);
 			this.$textarea.value = '';
+			this.updateCommentList();
+			this.updateHeight();
 		}
 	}
 
@@ -118,6 +104,78 @@ class Tucao {
 	 */
 	toggle() {
 		// 防止第一次动画不显示，在下一帧添加动画
-		setTimeout(() => this.$container.classList.contains('on') ? this.$container.classList.remove('on') : this.$container.classList.add('on'), 0);
+		setTimeout(() => {
+			if (this.$container.classList.contains('on')) {
+				this.$container.classList.remove('on');
+			} else {
+				this.$container.classList.add('on')
+			}
+			this.updateHeight();
+		}, 0);
+	}
+
+	/**
+	 * 更新吐槽
+	 */
+	updateCommentList() {
+		this.$commentList.innerHTML = '';
+		let start = (this.pagination.currentPage - 1) * this.pagination.entryPerPage;
+		let end = start + this.pagination.entryPerPage;
+		let list = this.comments.filter((c, i) => i >= start && i < end);
+		list.forEach(comment => this.createOneComment(comment));
+
+		this.updatePagination();
+	}
+
+	/**
+	 * 更新分页
+	 */
+	updatePagination() {
+		this.pagination.totalPage = Math.ceil(this.comments.length / this.pagination.entryPerPage);
+		this.$pagination.innerHTML = '';
+		let start, end;
+		if (this.pagination.currentPage > this.pagination.totalPage * 0.5) {
+			end = Math.min(this.pagination.currentPage + Math.floor(this.pagination.pageButtons / 2), this.pagination.totalPage);
+			start = Math.max(end - this.pagination.pageButtons, 1);
+		} else {
+			start = Math.max(this.pagination.currentPage - Math.floor(this.pagination.pageButtons / 2), 1);
+			end = Math.min(start + this.pagination.pageButtons, this.pagination.totalPage);
+		}
+
+		let li = document.createElement('li');
+		li.innerText = '<';
+		li.addEventListener('click', () => this.goPage(Math.max(this.pagination.currentPage - 1, 1)));
+		this.$pagination.append(li);
+
+		for (let i = start; i <= end; i++) {
+			li = document.createElement('li');
+			li.addEventListener('click', (_i => () => this.goPage(_i))(i));
+			li.innerText = i;
+			if (i === this.pagination.currentPage) {
+				li.classList.add('on');
+			}
+			this.$pagination.append(li);
+		}
+
+		li = document.createElement('li');
+		li.innerText = '>';
+		li.addEventListener('click', () => this.goPage(Math.min(this.pagination.currentPage + 1, this.pagination.totalPage)));
+		this.$pagination.append(li);
+	}
+
+	goPage(page) {
+		this.pagination.currentPage = page;
+		this.updateCommentList();
+	}
+
+	/**
+	 * 更新元素的高度
+	 */
+	updateHeight() {
+		if (this.$container.classList.contains('on')) {
+			this.$container.style.setProperty('--height', this.$container.scrollHeight + 'px');
+		} else {
+			this.$container.style.setProperty('--height', '0px');
+		}
 	}
 }

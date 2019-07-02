@@ -51,7 +51,6 @@ var commentService;
 			};
 
 			comments.push(comment);
-
 			resolve(comment);
 		});
 	}

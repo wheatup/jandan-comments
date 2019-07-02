@@ -5,7 +5,7 @@
  */
 const tucaoMap = new Map();
 
-window.onload = function(){
+window.onload = function () {
 	[...document.querySelectorAll('.commentlist .tucao-btn')].map(btn => {
 		replaceTucaoButton(btn);
 	});
@@ -32,11 +32,10 @@ function replaceTucaoButton(replacement) {
 		if (idRaw && (test = /^comment-(\d+)$/.exec(idRaw))) {
 			id = test[1];
 			btn.setAttribute('data-id', id);
-		}
 
-		replacement.insertAdjacentElement('afterend', btn);
-		replacement.remove();
-		return btn;
+			replacement.insertAdjacentElement('afterend', btn);
+			replacement.remove();
+		}
 	} else {
 		console.error('找不到无聊图id', replacement);
 	}

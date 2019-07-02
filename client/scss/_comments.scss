@@ -1,27 +1,27 @@
 .JC {
 	&-TucaoButton {
-		color: #999;
-		* {
-			color: inherit;
+		&, &:link, &:visited {
+			margin-left: 10px;
+			color: #999;
+		}
+
+		&:hover {
+			color: #d33;
 		}
 	}
 
 	&-Comments {
+		--height: 0px;
 		color: #666;
 		* {
 			color: inherit;
 		}
 
-		max-height: 0px;
 		overflow: hidden;
-		transition: max-height .5s ease-out;
-		transition-timing-function: ease-out;
-		&.on {
-			// TODO: 需要更好的方法进行纵向拉伸动画
-			max-height: 2000px;
-			transition-timing-function: ease-in;
-		}
+		transition: height .3s ease-out;
+		height: var(--height);
 
+		// 吐槽
 		ul {
 			padding: 0 !important;
 			margin: 0;
@@ -56,13 +56,22 @@
 						&::before {
 							margin-right: 4px;
 							font-weight: bold;
+							opacity: 0.5;
+							transition: opacity .3s;
+						}
+
+						&:hover{
+							cursor: pointer;
+							&::before{
+								opacity: 0.75;
+							}
 						}
 					}
 
 					& > *:nth-child(1) {
 						&::before {
 							content: 'OO';
-							color: #faa;
+							color: #f00;
 						}
 
 						margin-right: 12px;
@@ -71,13 +80,46 @@
 					& > *:nth-child(2) {
 						&::before {
 							content: 'XX';
-							color: #aaf;
+							color: #00f;
 						}
 					}
 				}
 			}
 		}
 
+		// 分页
+		ol {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			padding: 0 !important;
+			margin: 10px 0 !important;
+
+			li {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 40px;
+				height: 40px;
+				margin: 0;
+				padding: 10px;
+				border: $border;
+				cursor: pointer;
+
+				&:not(:last-child){
+					margin-right: 10px;
+				}
+
+				&.on {
+					color: white;
+					background-color: #aaa;
+				}
+
+				&:hover {
+					color: #faa;
+				}
+			}
+		}
 
 		&-Form {
 			display: block;
@@ -92,12 +134,17 @@
 			textarea {
 				resize: none;
 				width: 100%;
-				min-height: 240px;
+				min-height: 200px;
 				font-size: inherit;
 				padding: 12px;
 				outline: none;
 				border: $border;
 				background-color: #f2f2f2;
+				transition: background-color .3s, min-height .3s;
+
+				&:focus {
+					background-color: #f9f9f9;
+				}
 			}
 
 			footer {
