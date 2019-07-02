@@ -45,14 +45,16 @@ async function onClickTucao({ target }) {
 	let id = target.getAttribute('data-id');
 	if (typeof openedTucao[id] === 'undefined') {
 		let { comments } = await getComments(id);
-		createCommentsDiv(id, target.parentElement.parentElement.parentElement, comments);
+		let parent = target.parentElement.parentElement.parentElement;
+		createCommentsDiv(id, parent, comments);
+		createCommentInput(id, parent);
 	}
 	toggleCommentsDiv(id, !openedTucao[id]);
 	openedTucao[id] = !openedTucao[id];
 }
 
 /**
- * 
+ * 显示/隐藏吐槽区域
  * @param {Number|String} id 无聊图id
  * @param {Boolean} open 是否开启
  */
@@ -66,7 +68,7 @@ function toggleCommentsDiv(id, open) {
 
 
 /**
- * 创建评论区域
+ * 创建吐槽区域
  * @param {Number|String} id 无聊图id
  * @param {HTMLElement} target 追加的父元素
  * @param {Array} comments 吐槽
@@ -96,7 +98,7 @@ function createCommentsDiv(id, target, comments) {
 
 	let ul = document.createElement('ul');
 
-	// 创建评论
+	// 创建吐槽
 	comments.forEach(comment => {
 		let li = document.createElement('li');
 
@@ -118,9 +120,6 @@ function createCommentsDiv(id, target, comments) {
 
 	div.append(ul);
 
-	// 创建输入框
-	createCommentInput(id, div);
-
 	target.append(div);
 }
 
@@ -133,7 +132,6 @@ function createCommentsDiv(id, target, comments) {
 function createCommentInput(id, target) {
 
 	/*
-
 	<form class="JC-Comments-Form" onsumbit="return false;">
 		<header></header>
 		<textarea></textarea>
@@ -141,7 +139,6 @@ function createCommentInput(id, target) {
 			<a href="javascript:void(0)">发送</a>
 		</footer>
 	</form>
-
 	*/
 
 	const form = document.createElement('from');
