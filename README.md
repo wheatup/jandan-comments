@@ -12,4 +12,4 @@
 
 ## 服务端
 
-> 打算使用`node.js`、`express`与`mongodb`。
+* 待定中。

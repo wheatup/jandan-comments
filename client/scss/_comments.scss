@@ -14,16 +14,17 @@
 
 		max-height: 0px;
 		overflow: hidden;
-		transition: max-height .5s;
+		transition: max-height .5s ease-out;
 		&.on {
 			max-height: 1280px;
+			transition-timing-function: ease-in;
 		}
 
 		ul {
 			padding: 0 !important;
 			margin: 0;
 			li {
-				border: solid 1px rgba(0, 0, 0, 0.1);
+				border: $border;
 				padding: 20px;
 				header {
 					color: #999;
@@ -71,6 +72,40 @@
 							color: #aaf;
 						}
 					}
+				}
+			}
+		}
+
+
+		&-Form {
+			display: block;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			position: relative;
+
+			header {
+
+			}
+
+			textarea {
+				resize: none;
+				width: 100%;
+				min-height: 240px;
+				font-size: inherit;
+				padding: 12px;
+				outline: none;
+				border: $border;
+				background-color: #f2f2f2;
+			}
+
+			footer {
+				display: flex;
+
+				a {
+					flex: 1;
+					padding: 12px;
+					text-align: center;
+					border: $border;
 				}
 			}
 		}
