@@ -1,6 +1,25 @@
 {
 	"name": "Jandan Comments",
-	"version": "1.0",
+	"version": "0.0.1",
 	"description": "Jandan Comments",
-	"manifest_version": 2
+	"manifest_version": 2,
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"permissions": ["*://jandan.net/*", "declarativeContent"],
+	"content_scripts": [
+		{
+			"css": ["css/main.css"],
+			"matches": ["*://jandan.net/*"],
+			"js": ["jandanCommentServer.js", "jandan.js"]
+		}
+	],
+	"page_action": {
+		"default_title": "Jandan Comments",
+		"default_icon": {
+			"128": "resources/icon-128.png"
+		},
+		"default_popup": "popup.html"
+	}
 }
