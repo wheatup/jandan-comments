@@ -4,7 +4,7 @@
 	"description": "Jandan Comments",
 	"manifest_version": 2,
 	"background": {
-		"scripts": ["background.js"],
+		"scripts": ["start.js"],
 		"persistent": false
 	},
 	"permissions": ["*://jandan.net/*", "declarativeContent"],
@@ -12,7 +12,7 @@
 		{
 			"css": ["css/main.css"],
 			"matches": ["*://jandan.net/*"],
-			"js": ["jandanCommentServer.js", "jandan.js"]
+			"js": ["js/tucao.js", "js/jandanCommentServer.js", "js/jandan.js"]
 		}
 	],
 	"page_action": {
