@@ -41,6 +41,10 @@ class Tucao {
 		this.$container.append(this.$commentList);
 	}
 
+	/**
+	 * 插入一条评论
+	 * @param {Object} comment 
+	 */
 	createOneComment(comment) {
 		let li = document.createElement('li');
 
