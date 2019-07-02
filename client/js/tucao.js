@@ -2,7 +2,7 @@ class Tucao {
 
 	constructor(id, comments) {
 		this.id = id;
-		this.comments = comments;
+		this.comments = [...comments];
 
 		this.$container = document.createElement('div');
 		this.$container.classList.add('JC-Comments');
@@ -36,11 +36,16 @@ class Tucao {
 		this.$commentList = document.createElement('ul');
 
 		// 创建吐槽
-		this.comments.forEach(comment => {
-			let li = document.createElement('li');
+		this.comments.forEach(comment => this.createOneComment(comment));
 
-			// TODO: 安全性Escape
-			li.innerHTML = `
+		this.$container.append(this.$commentList);
+	}
+
+	createOneComment(comment) {
+		let li = document.createElement('li');
+
+		// TODO: 安全性Escape
+		li.innerHTML = `
 			<header>
 				<span>${comment.author}</span>
 				<span>${comment.date}</span>
@@ -52,19 +57,14 @@ class Tucao {
 			</footer>
 		`;
 
-			this.$commentList.append(li);
-		});
-
-		this.$container.append(this.$commentList);
+		this.$commentList.append(li);
 	}
-
 
 
 	/**
 	 * 创建吐槽输入区域
 	 */
 	createCommentForm() {
-
 		/*
 		<form class="JC-Comments-Form" onsumbit="return false;">
 			<header></header>
@@ -80,18 +80,33 @@ class Tucao {
 		this.$commentForm.onsubmit = 'return false;';
 
 		const header = document.createElement('header');
-		const textarea = document.createElement('textarea');
 		const footer = document.createElement('footer');
 		const btnSubmit = document.createElement('a');
+
+		this.$textarea = document.createElement('textarea');
+
 		btnSubmit.href = 'javascript: void(0);';
 		btnSubmit.innerText = '发送';
+		btnSubmit.addEventListener('click', () => this.postComment());
 		footer.append(btnSubmit);
 
 		this.$commentForm.append(header);
-		this.$commentForm.append(textarea);
+		this.$commentForm.append(this.$textarea);
 		this.$commentForm.append(footer);
 
 		this.$container.append(this.$commentForm);
+	}
+
+	async postComment() {
+		let content = this.$textarea.value;
+		if (!content || content.length < 4) {
+			alert('你的太短');
+		} else {
+			let comment = await commentService.postComment(this.id, '蛋友', content);
+			this.comments.push(comment);
+			this.createOneComment(comment);
+			this.$textarea.value = '';
+		}
 	}
 
 	/**

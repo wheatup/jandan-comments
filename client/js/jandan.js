@@ -51,7 +51,7 @@ async function onClickTucao({ target }) {
 	let id = target.getAttribute('data-id');
 	let tucao = tucaoMap.get(id);
 	if (!tucao) {
-		let { comments } = await getComments(id);
+		let { comments } = await commentService.getComments(id);
 
 		tucao = new Tucao(id, comments);
 		tucaoMap.set(id, tucao);

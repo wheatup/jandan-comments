@@ -12,7 +12,7 @@
 		{
 			"css": ["css/main.css"],
 			"matches": ["*://jandan.net/*"],
-			"js": ["js/tucao.js", "js/jandanCommentServer.js", "js/jandan.js"]
+			"js": ["js/services/commentService.js", "js/tucao.js", "js/jandan.js"]
 		}
 	],
 	"page_action": {

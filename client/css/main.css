@@ -10,11 +10,12 @@
   color: #666;
   max-height: 0px;
   overflow: hidden;
-  transition: max-height .5s ease-out; }
+  transition: max-height .5s ease-out;
+  transition-timing-function: ease-out; }
   .JC-Comments * {
     color: inherit; }
   .JC-Comments.on {
-    max-height: 1280px;
+    max-height: 2000px;
     transition-timing-function: ease-in; }
   .JC-Comments ul {
     padding: 0 !important;
