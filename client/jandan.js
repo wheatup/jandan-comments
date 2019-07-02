@@ -1,13 +1,15 @@
-[...document.querySelectorAll('.commentlist .tucao-btn')].map(btn => {
-	replaceTucaoButton(btn);
-});
-
 /**
  * 所有吐槽的map
  * @key 无聊图id
  * @value 吐槽Element
  */
 const tucaoMap = new Map();
+
+window.onload = function(){
+	[...document.querySelectorAll('.commentlist .tucao-btn')].map(btn => {
+		replaceTucaoButton(btn);
+	});
+}
 
 
 /**
@@ -50,28 +52,30 @@ async function onClickTucao({ target }) {
 	let id = target.getAttribute('data-id');
 	if (!tucaoMap.has(id)) {
 		let { comments } = await getComments(id);
+
+		let tucao = createTucao(id, comments);
+		tucaoMap.set(id, tucao);
+
 		// TODO: 需要更稳定的父元素
 		let parent = target.parentElement.parentElement.parentElement;
-		let tucao = createCommentDiv(id, comments);
-
-		tucaoMap.set(id, tucao);
 		parent.append(tucao);
 	}
-	toggleCommentsDiv(id);
+	toggleTucao(id);
 }
 
 
 /**
  * 创建吐槽组件
  * @param {Number|String} id 无聊图id
+ * @param {Array} comments 吐槽数据
  */
-function createCommentDiv(id, comments) {
+function createTucao(id, comments) {
 	let container = document.createElement('div');
 	container.classList.add('JC-Comments');
 	container.setAttribute('data-id', id);
 
-	container.append(createCommentsDiv(comments));
-	container.append(createCommentInput());
+	container.append(createCommentList(comments));
+	container.append(createCommentForm());
 	return container;
 }
 
@@ -80,7 +84,7 @@ function createCommentDiv(id, comments) {
  * 显示/隐藏吐槽区域
  * @param {Number|String} id 无聊图id
  */
-function toggleCommentsDiv(id) {
+function toggleTucao(id) {
 	const target = tucaoMap.get(id);
 	if (target) {
 		// 防止第一次动画不显示，在下一帧添加动画
@@ -93,7 +97,7 @@ function toggleCommentsDiv(id) {
  * 创建吐槽列表区域
  * @param {Array} comments 吐槽数据
  */
-function createCommentsDiv(comments) {
+function createCommentList(comments) {
 	/* 
 	<ul>
 		<li>
@@ -139,7 +143,7 @@ function createCommentsDiv(comments) {
 /**
  * 创建吐槽输入区域
  */
-function createCommentInput() {
+function createCommentForm() {
 
 	/*
 	<form class="JC-Comments-Form" onsumbit="return false;">
