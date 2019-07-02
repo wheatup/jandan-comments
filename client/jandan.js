@@ -2,7 +2,12 @@
 	replaceTucaoButton(btn);
 });
 
-const openedTucao = {};
+/**
+ * 所有吐槽的map
+ * @key 无聊图id
+ * @value 吐槽Element
+ */
+const tucaoMap = new Map();
 
 
 /**
@@ -43,26 +48,43 @@ function replaceTucaoButton(replacement) {
  */
 async function onClickTucao({ target }) {
 	let id = target.getAttribute('data-id');
-	if (typeof openedTucao[id] === 'undefined') {
+	if (!tucaoMap.has(id)) {
 		let { comments } = await getComments(id);
+		// TODO: 需要更稳定的父元素
 		let parent = target.parentElement.parentElement.parentElement;
-		createCommentsDiv(id, parent, comments);
-		createCommentInput(id, parent);
+		let tucao = createCommentDiv(id, comments);
+		
+		tucaoMap.set(id, tucao);
+		parent.append(tucao);
 	}
-	toggleCommentsDiv(id, !openedTucao[id]);
-	openedTucao[id] = !openedTucao[id];
+	toggleCommentsDiv(id);
 }
+
+
+/**
+ * 创建吐槽组件
+ * @param {Number|String} id 无聊图id
+ */
+function createCommentDiv(id, comments) {
+	let container = document.createElement('div');
+	container.classList.add('JC-Comments');
+	container.setAttribute('data-id', id);
+
+	container.append(createCommentsDiv(id, container, comments));
+	container.append(createCommentInput(id, container));
+	return container;
+}
+
 
 /**
  * 显示/隐藏吐槽区域
  * @param {Number|String} id 无聊图id
- * @param {Boolean} open 是否开启
  */
-function toggleCommentsDiv(id, open) {
-	const target = document.querySelector(`.JC-Comments[data-id='${id}']`);
+function toggleCommentsDiv(id) {
+	const target = tucaoMap.get(id);
 	if (target) {
 		// 防止第一次动画不显示，在下一帧添加动画
-		setTimeout(() => open ? target.classList.add('on') : target.classList.remove('on'), 0);
+		setTimeout(() => target.classList.contains('on') ? target.classList.remove('on') : target.classList.add('on'), 0);
 	}
 }
 
@@ -75,26 +97,20 @@ function toggleCommentsDiv(id, open) {
  */
 function createCommentsDiv(id, target, comments) {
 	/* 
-	<div class="JC-Comments on" data-id="4289379">
-		<ul>
-			<li>
-				<header>
-					<span>wheatup</span>
-					<span>2019-7-2 12:00:12</span>
-				</header>
-				<p>测试测试测试测试测试测试3</p>
-				<footer>
-					<span>[122]</span>
-					<span>[0]</span>
-				</footer>
-			</li>
-		</ul>
-	</div>
+	<ul>
+		<li>
+			<header>
+				<span>wheatup</span>
+				<span>2019-7-2 12:00:12</span>
+			</header>
+			<p>测试测试测试测试测试测试3</p>
+			<footer>
+				<span>[122]</span>
+				<span>[0]</span>
+			</footer>
+		</li>
+	</ul>
 	*/
-
-	let div = document.createElement('div');
-	div.classList.add('JC-Comments');
-	div.setAttribute('data-id', id);
 
 	let ul = document.createElement('ul');
 
@@ -118,9 +134,7 @@ function createCommentsDiv(id, target, comments) {
 		ul.append(li);
 	});
 
-	div.append(ul);
-
-	target.append(div);
+	return ul;
 }
 
 
@@ -157,5 +171,5 @@ function createCommentInput(id, target) {
 	form.append(textarea);
 	form.append(footer);
 
-	target.append(form);
+	return form;
 }
