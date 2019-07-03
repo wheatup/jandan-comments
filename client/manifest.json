@@ -4,7 +4,7 @@
 	"description": "Jandan Comments",
 	"manifest_version": 2,
 	"background": {
-		"scripts": ["start.js"],
+		"scripts": ["background.js"],
 		"persistent": false
 	},
 	"permissions": ["*://jandan.net/*", "declarativeContent"],
@@ -12,9 +12,10 @@
 		{
 			"css": ["css/main.css"],
 			"matches": ["*://jandan.net/*"],
-			"js": ["js/services/commentService.js", "js/tucao.js", "js/jandan.js"]
+			"js": ["content.js"]
 		}
 	],
+	"web_accessible_resources": ["js/app.js", "js/jandan.js", "js/tucao.js", "js/services/commentService.js"],
 	"page_action": {
 		"default_title": "Jandan Comments",
 		"default_icon": {

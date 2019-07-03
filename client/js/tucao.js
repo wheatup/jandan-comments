@@ -1,4 +1,6 @@
-class Tucao {
+import commentService from './services/commentService.js';
+
+export default class Tucao {
 	constructor(id, comments) {
 		this.id = id;
 		this.comments = [...comments];
