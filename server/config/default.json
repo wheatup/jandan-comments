@@ -1,0 +1,5 @@
+{
+	"db": "mongodb://localhost/vidly",
+	"port": "3900",
+	"requiresAuth": false
+}
